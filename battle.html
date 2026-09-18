@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG バトルラボ - バトル</title>
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-screen p-4 overflow-x-auto">
+    <!-- モーダルダイアログ -->
+    <div id="instructionModal" class="modal-overlay">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-blue-500 rounded-xl p-8 w-fit min-w-[320px] max-w-[95vw] shadow-2xl scale-90 transition-transform duration-300 ease-in-out">
+            <h2 class="text-2xl font-bold text-white mb-4">バトル説明</h2>
+            <div class="text-gray-300 mb-6 space-y-3">
+                <p>このバトルでは、カードを選択して戦闘を進めます。</p>
+                <p>・画面左側に表示されている4枚のカードから1枚を選択してください<br />
+                   ・カードを選択すると、新しいカードがランダムに配られます<br />
+                   ・幸運度が高いと高いレアリティのカードが出やすくなります<br />
+                   ・キャラクターのHPとMPを確認しながら戦略的にカードを選びましょう<br />
+                   ・バトルログで戦闘の進行状況を確認できます</p>
+            </div>
+            <button id="closeModalBtn" class="mx-auto block bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-16 rounded-lg text-xl shadow-2xl transform transition-all duration-300 hover:scale-105 active:scale-95">閉じる</button>
+        </div>
+    </div>
+
+    <div id="battleContainer" class="container mx-auto max-w-7xl min-w-[1366px] fade-in">
+        <!-- キャラクター情報エリア -->
+        <div class="grid grid-cols-2 gap-6 mb-6">
+            <!-- プレイヤー -->
+            <div class="character-card-player bg-gray-800 rounded-lg p-4 border-2 border-blue-500 shadow-xl">
+                <div class="flex items-center mb-4">
+                    <img class="character-image w-48 h-32 object-cover rounded-lg mr-4">
+                    <div class="flex-1">
+                        <h3 class="character-name text-2xl font-bold text-white mb-2">ヴォルガド</h3>
+                        <!-- HP -->
+                        <div class="mb-2">
+                            <div class="flex justify-between text-sm text-gray-300 mb-1">
+                                <span>HP</span>
+                                <span class="character-hp-text">1,000 / 2,000</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div class="character-hp-fill hp-fill" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <!-- MP -->
+                        <div class="mb-2">
+                            <div class="flex justify-between text-sm text-gray-300 mb-1">
+                                <span>MP</span>
+                                <span class="character-mp-text">500 / 1,000</span>
+                            </div>
+                            <div class="mp-bar">
+                                <div class="character-mp-fill mp-fill" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                    <div class="text-gray-300">
+                        <span class="text-gray-400">物理攻撃力:</span> 
+                        <span class="character-physical-attack text-white font-bold">150</span>
+                    </div>
+                    <div class="text-gray-300">
+                        <span class="text-gray-400">魔法攻撃力:</span> 
+                        <span class="character-magical-attack text-white font-bold">80</span>
+                    </div>
+                    <div class="text-gray-300">
+                        <span class="text-gray-400">幸運:</span> 
+                        <span class="character-luck text-white font-bold">100</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 魔王 -->
+            <div class="character-card-enemy bg-gray-800 rounded-lg p-4 border-2 border-blue-500 shadow-xl">
+                <div class="flex items-center mb-4">
+                    <img class="character-image w-48 h-32 object-cover rounded-lg mr-4">
+                    <div class="flex-1">
+                        <h3 class="character-name text-2xl font-bold text-white mb-2">魔王</h3>
+                        <!-- HP -->
+                        <div class="mb-2">
+                            <div class="flex justify-between text-sm text-gray-300 mb-1">
+                                <span>HP</span>
+                                <span class="character-hp-text">1,000 / 2,000</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div class="character-hp-fill hp-fill" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <!-- MP -->
+                        <div class="mb-2">
+                            <div class="flex justify-between text-sm text-gray-300 mb-1">
+                                <span>MP</span>
+                                <span class="character-mp-text">500 / 1,000</span>
+                            </div>
+                            <div class="mp-bar">
+                                <div class="character-mp-fill mp-fill" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                    <div class="text-gray-300">
+                        <span class="text-gray-400">物理攻撃力:</span> 
+                        <span class="character-physical-attack text-white font-bold">150</span>
+                    </div>
+                    <div class="text-gray-300">
+                        <span class="text-gray-400">魔法攻撃力:</span> 
+                        <span class="character-magical-attack text-white font-bold">80</span>
+                    </div>
+                    <div class="text-gray-300">
+                        <span class="text-gray-400">幸運:</span> 
+                        <span class="character-luck text-white font-bold">100</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- メインコンテンツエリア -->
+        <div class="grid grid-cols-3 gap-6">
+            <!-- 左側: ターン数とカード選択 -->
+            <div class="col-span-2">
+                <!-- ターン数と操作エリア -->
+                <div class="flex justify-between items-center mb-4 px-2">
+                    <h2 class="text-2xl font-bold text-white">
+                        現在のターン数: <span class="text-yellow-400" id="turnCount">1</span>
+                    </h2>
+                    <div class="flex items-center gap-3">
+                        <label for="skipAnimationToggle" class="toggle-label-wrap">
+                            <span class="text-sm font-bold text-gray-200 flex items-center gap-1">⚡ 演出スキップ</span>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="skipAnimationToggle">
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </label>
+                        <button id="rerollBtn" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-5 rounded-lg shadow-lg border border-blue-400 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                            <span>🎲 リロール</span>
+                            <span id="rerollCountBadge" class="bg-blue-950 border border-blue-400 text-blue-200 text-xs px-2.5 py-0.5 rounded-full font-mono font-bold">残り 3回</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- カード選択エリア -->
+                <div class="space-y-4">
+                    <!-- カード1 -->
+                    <div class="card-item bg-gray-800 rounded-lg p-4 border-2 border-gray-700 shadow-lg" 
+                         data-card="1" data-rarity="rare">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="skill-name text-lg font-bold text-white">ファイアボール</h4>
+                            <div class="flex gap-1">
+                                <span class="rarity-indicator rarity-common">コモン</span>
+                                <span class="rarity-indicator rarity-uncommon">アンコモン</span>
+                                <span class="rarity-indicator rarity-rare active">レア</span>
+                                <span class="rarity-indicator rarity-epic">エピック</span>
+                                <span class="rarity-indicator rarity-legendary">レジェンダリー</span>
+                            </div>
+                        </div>
+                        <p class="skill-description text-gray-300 text-sm">
+                            強力な火の魔法を放ち、敵に大きなダメージを与えます。範囲攻撃のため、複数の敵がいる場合にも効果的です。MPを消費して使用しますが、その威力は絶大です。魔法使いタイプのキャラクターが使用すると、さらに威力が上がります。
+                        </p>
+                    </div>
+                    
+                    <!-- カード2 -->
+                    <div class="card-item bg-gray-800 rounded-lg p-4 border-2 border-gray-700 shadow-lg" 
+                         data-card="2" data-rarity="epic">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="skill-name text-lg font-bold text-white">ヒール</h4>
+                            <div class="flex gap-1">
+                                <span class="rarity-indicator rarity-common">コモン</span>
+                                <span class="rarity-indicator rarity-uncommon">アンコモン</span>
+                                <span class="rarity-indicator rarity-rare">レア</span>
+                                <span class="rarity-indicator rarity-epic active">エピック</span>
+                                <span class="rarity-indicator rarity-legendary">レジェンダリー</span>
+                            </div>
+                        </div>
+                        <p class="skill-description text-gray-300 text-sm">
+                            自分のHPを回復する回復魔法です。戦闘中に体力が減った際に使用することで、継続的な戦闘が可能になります。回復量は使用するキャラクターの魔法攻撃力に比例して増加します。緊急時に使用することで、戦況を一変させることができる重要なカードです。
+                        </p>
+                    </div>
+                    
+                    <!-- カード3 -->
+                    <div class="card-item bg-gray-800 rounded-lg p-4 border-2 border-gray-700 shadow-lg" 
+                         data-card="3" data-rarity="common">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="skill-name text-lg font-bold text-white">通常攻撃</h4>
+                            <div class="flex gap-1">
+                                <span class="rarity-indicator rarity-common active">コモン</span>
+                                <span class="rarity-indicator rarity-uncommon">アンコモン</span>
+                                <span class="rarity-indicator rarity-rare">レア</span>
+                                <span class="rarity-indicator rarity-epic">エピック</span>
+                                <span class="rarity-indicator rarity-legendary">レジェンダリー</span>
+                            </div>
+                        </div>
+                        <p class="skill-description text-gray-300 text-sm">
+                            基本的な物理攻撃を行います。MPを消費しないため、何度でも使用できる便利なカードです。物理攻撃力に基づいてダメージが計算され、安定したダメージを与えることができます。他のカードが使えない状況でも、このカードがあれば戦闘を続けることができます。
+                        </p>
+                    </div>
+                    
+                    <!-- カード4 -->
+                    <div class="card-item bg-gray-800 rounded-lg p-4 border-2 border-gray-700 shadow-lg" 
+                         data-card="4" data-rarity="legendary">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="skill-name text-lg font-bold text-white">メテオストライク</h4>
+                            <div class="flex gap-1">
+                                <span class="rarity-indicator rarity-common">コモン</span>
+                                <span class="rarity-indicator rarity-uncommon">アンコモン</span>
+                                <span class="rarity-indicator rarity-rare">レア</span>
+                                <span class="rarity-indicator rarity-epic">エピック</span>
+                                <span class="rarity-indicator rarity-legendary active">レジェンダリー</span>
+                            </div>
+                        </div>
+                        <p class="skill-description text-gray-300 text-sm">
+                            最強の魔法攻撃です。天から巨大な隕石を降らせ、敵に絶大なダメージを与えます。非常に高いMPを消費しますが、その威力は他のカードを遥かに超えています。このカードを使用することで、強敵も一撃で倒すことが可能になります。ただし、使用回数に制限があるため、使用するタイミングが重要です。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右側: バトルログ -->
+            <div class="col-span-1">
+                <h2 class="text-2xl font-bold text-white text-center mb-4">バトルログ</h2>
+                <textarea id="battleLog" 
+                          class="battle-log w-full h-full bg-gray-800 text-green-400 p-4 rounded-lg border-2 border-gray-700 shadow-lg "  
+                          readonly>バトルが開始されました。</textarea>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/battle.js"></script>
+</body>
+</html>
